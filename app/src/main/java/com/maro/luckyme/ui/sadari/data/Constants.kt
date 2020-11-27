@@ -9,7 +9,7 @@ object Constants {
 
     val MIN_BRANCH_COUNT = 3 // 사다리 한칸 최소 브랜치 수
     val MAX_BRANCH_COUNT = 6 // 사다리 한칸 최대 브랜치 수
-    val TOTAL_BRANCH_COUNT = 10 // 사다리 한칸 브랜치 총 수
+    val TOTAL_BRANCH_COUNT = MAX_BRANCH_COUNT + MAX_BRANCH_COUNT + 2 // 사다리 한칸 브랜치 총 수 (절대 MAX_BRANCH_COUNT * 2 보다 작아서는 안된다. 왜냐하면 브랜치가 좌우로 있을 수 있기 때문에.. )
 
     val STROKE_WIDTH = R.dimen.sadari_stroke_width
 

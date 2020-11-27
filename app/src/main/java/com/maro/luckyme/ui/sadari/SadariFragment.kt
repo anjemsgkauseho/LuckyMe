@@ -28,6 +28,12 @@ class SadariFragment : Fragment() {
         binding = SadariFragmentBinding.inflate(inflater, null, false).apply {
             viewModel = this@SadariFragment.viewModel
             lifecycleOwner = this@SadariFragment
+
+            svSadari.setOnSadariStatusChangedListener(object : OnSadariStatusChangedListener {
+                override fun onChanged(status: Int) {
+                    this@SadariFragment.viewModel.playStatus.value = status
+                }
+            })
         }
 
         return binding.root
@@ -36,7 +42,6 @@ class SadariFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        Log.e("XXX", "=====> 3")
         setObservers()
     }
 
@@ -53,7 +58,6 @@ class SadariFragment : Fragment() {
 
 @BindingAdapter("playerCount", "bombCount")
 fun sadariData(view: SadariView, playerCount: Int?, bombCount: Int?) {
-    Log.e("XXX", "=====> 4")
     playerCount?.let {
         bombCount?.let {
             view.setData(playerCount, bombCount)

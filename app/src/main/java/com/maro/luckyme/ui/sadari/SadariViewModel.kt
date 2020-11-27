@@ -30,22 +30,18 @@ class SadariViewModel : ViewModel() {
 
     init {
         _maxBombCount.addSource(_playerCount) {
-            Log.e("XXX", "==> ${it}")
             _maxBombCount.value = it / 2
         }
 
         _bombCount.addSource(_maxBombCount) {
             _bombCount.value?.let { bombCount ->
                 _maxBombCount.value?.let { maxBombCount ->
-                    Log.e("XXX", "=====> 2")
                     if (bombCount > maxBombCount) {
                         _bombCount.value = _maxBombCount.value
                     }
                 }
             }
         }
-
-        Log.e("XXX", "=====> 1")
 
         // XXX 저장된 값을 가져와야 함
         _playerCount.value = Constants.DEFAULT_PLAYER_COUNT

@@ -120,10 +120,21 @@ class SadariView @JvmOverloads constructor(context: Context, attrs: AttributeSet
     var tan: FloatArray = FloatArray(2)
 
     // 게임 상태
-    var playStatus = STATUS_WAITING
+    var playStatus: Int = STATUS_WAITING
+        get() = field
+        set(value) {
+            listener?.onChanged(value!!)
+            field = value
+        }
+
+    var listener: OnSadariStatusChangedListener? = null
 
     init {
         initView()
+    }
+
+    fun setOnSadariStatusChangedListener(listener: OnSadariStatusChangedListener) {
+        this@SadariView.listener = listener
     }
 
     private fun initView() {
@@ -151,8 +162,6 @@ class SadariView @JvmOverloads constructor(context: Context, attrs: AttributeSet
             style = Paint.Style.FILL
             textSize = resources.getDimensionPixelSize(R.dimen.dp12).toFloat()
         }
-
-        Log.e("XXX", "=====> 7")
 
         setOnTouchListener { v, event ->
             processTouchEvent(v, event)
@@ -194,7 +203,6 @@ class SadariView @JvmOverloads constructor(context: Context, attrs: AttributeSet
         var height = PLAYER_WIDTH + DP8 + KKODARI + CELL_HEIGHT * TOTAL_BRANCH_COUNT + KKODARI + DP8 + DP20 * 2 + DP8
 
         setMeasuredDimension(width, height)
-        Log.e("XXX", "=====> 6")
     }
 
     override fun onDraw(canvas: Canvas?) {
@@ -202,7 +210,6 @@ class SadariView @JvmOverloads constructor(context: Context, attrs: AttributeSet
 
         canvas?.let {
             sadari?.let {
-                Log.e("XXX", "---> ")
                 drawSadari(canvas)
                 drawPlayer(canvas)
                 drawHitAndMiss(canvas)
@@ -356,7 +363,6 @@ class SadariView @JvmOverloads constructor(context: Context, attrs: AttributeSet
     }
 
     private fun branchToPath(branchList: List<Branch>, playerIndex: Int): Path {
-        Log.e("XXX", "=====> 8")
         // XXX 중복 코드
         var sadariStartX = (PLAYER_WIDTH / 2).toFloat()
         var sadariStartY = (PLAYER_WIDTH + DP8).toFloat()
