@@ -152,6 +152,8 @@ class SadariView @JvmOverloads constructor(context: Context, attrs: AttributeSet
             textSize = resources.getDimensionPixelSize(R.dimen.dp12).toFloat()
         }
 
+        Log.e("XXX", "=====> 7")
+
         setOnTouchListener { v, event ->
             processTouchEvent(v, event)
         }
@@ -192,6 +194,7 @@ class SadariView @JvmOverloads constructor(context: Context, attrs: AttributeSet
         var height = PLAYER_WIDTH + DP8 + KKODARI + CELL_HEIGHT * TOTAL_BRANCH_COUNT + KKODARI + DP8 + DP20 * 2 + DP8
 
         setMeasuredDimension(width, height)
+        Log.e("XXX", "=====> 6")
     }
 
     override fun onDraw(canvas: Canvas?) {
@@ -353,6 +356,7 @@ class SadariView @JvmOverloads constructor(context: Context, attrs: AttributeSet
     }
 
     private fun branchToPath(branchList: List<Branch>, playerIndex: Int): Path {
+        Log.e("XXX", "=====> 8")
         // XXX 중복 코드
         var sadariStartX = (PLAYER_WIDTH / 2).toFloat()
         var sadariStartY = (PLAYER_WIDTH + DP8).toFloat()

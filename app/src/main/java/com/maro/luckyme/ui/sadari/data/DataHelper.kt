@@ -1,5 +1,6 @@
 package com.maro.luckyme.ui.sadari.data
 
+import android.util.Log
 import com.maro.luckyme.ui.sadari.data.Constants.DIRECTION_LEFT
 import com.maro.luckyme.ui.sadari.data.Constants.DIRECTION_RIGHT
 import com.maro.luckyme.ui.sadari.data.Constants.MAX_BRANCH_COUNT
@@ -13,6 +14,7 @@ object DataHelper {
     }
 
     fun makeSadariData(playerCount: Int): LinkedList<Stream> {
+        Log.e("XXX", "=====> 7")
         var sadari = LinkedList<Stream>()
 
         var currentIndex: Int? = null
@@ -27,6 +29,7 @@ object DataHelper {
     }
 
     fun makeBombIndexList(playerCount: Int, bombCount: Int): List<Int> {
+        Log.e("XXX", "=====> 8")
         var bombIndexList = arrayListOf<Int>()
         for (i in 0..playerCount-1) {
             var index = Random().nextInt(playerCount)
