@@ -7,6 +7,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.maro.luckyme.ui.SingleLiveEvent
 import com.maro.luckyme.ui.sadari.data.Constants
+import com.maro.luckyme.ui.sadari.data.Constants.STATUS_STARTED
+import com.maro.luckyme.ui.sadari.data.Constants.STATUS_WAITING
 
 class SadariViewModel : ViewModel() {
 
@@ -22,7 +24,9 @@ class SadariViewModel : ViewModel() {
     val maxBombCount: LiveData<Int>
         get() = _maxBombCount
 
+    val playStatus = MutableLiveData<Int>(STATUS_WAITING)
     val playAllEvent = SingleLiveEvent<Unit>()
+    val startEvent = SingleLiveEvent<Unit>()
 
     init {
         _maxBombCount.addSource(_playerCount) {
@@ -84,5 +88,10 @@ class SadariViewModel : ViewModel() {
 
     fun onPlayAllClicked() {
         playAllEvent.call()
+    }
+
+    fun onStartClicked() {
+        playStatus.value = STATUS_STARTED
+        startEvent.call()
     }
 }

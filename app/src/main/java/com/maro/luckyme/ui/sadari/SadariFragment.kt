@@ -42,6 +42,10 @@ class SadariFragment : Fragment() {
         viewModel.playAllEvent.observe(viewLifecycleOwner, Observer {
             binding.svSadari.playAll()
         })
+
+        viewModel.startEvent.observe(viewLifecycleOwner, Observer {
+            binding.svSadari.startSadari()
+        })
     }
 }
 

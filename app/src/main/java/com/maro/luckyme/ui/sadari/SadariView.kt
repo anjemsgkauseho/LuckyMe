@@ -105,7 +105,6 @@ class SadariView @JvmOverloads constructor(context: Context, attrs: AttributeSet
     lateinit var paint2: Paint
     lateinit var animPaint: Paint
     lateinit var hitPaint: Paint
-    lateinit var startPaint: Paint
 
 
     lateinit var sadari: LinkedList<Stream>
@@ -151,12 +150,6 @@ class SadariView @JvmOverloads constructor(context: Context, attrs: AttributeSet
             color = ContextCompat.getColor(context, R.color.white)
             style = Paint.Style.FILL
             textSize = resources.getDimensionPixelSize(R.dimen.dp12).toFloat()
-        }
-
-        startPaint = Paint().apply {
-            color = ContextCompat.getColor(context, R.color.white)
-            style = Paint.Style.FILL
-            textSize = resources.getDimensionPixelSize(R.dimen.dp24).toFloat()
         }
 
         setOnTouchListener { v, event ->
@@ -313,27 +306,19 @@ class SadariView @JvmOverloads constructor(context: Context, attrs: AttributeSet
 
         var margin = DP24
 
-        // DP24는 텍스트 사이즈
-        var textX = left + (right - left) / 2 - (DP24 * 4 / 2) + 10 // 10을 더한 이유는 억지로 위치를 맞추기 위함
-        var textY = top + (bottom - top) / 2
-
-        var buttonRect = getStartButtonRect()
-
         canvas.drawRect(left - margin, top + margin, right + margin, bottom - margin, paint)
-        canvas.drawRect(buttonRect.left.toFloat(), buttonRect.top.toFloat(), buttonRect.right.toFloat(), buttonRect.bottom.toFloat(), paint2)
-        canvas.drawText("시작하기", textX, textY, startPaint)
     }
 
     private fun processTouchEvent(v: View, event: MotionEvent): Boolean {
         if (event.action == ACTION_UP) {
             when (playStatus) {
                 STATUS_WAITING -> {
-                    var buttonRect = getStartButtonRect()
-                    if (buttonRect.left <= event.x && buttonRect.right >= event.x
-                            && buttonRect.top <= event.y && buttonRect.bottom >= event.y) {
-                        playStatus = STATUS_STARTED
-                        invalidate()
-                    }
+//                    var buttonRect = getStartButtonRect()
+//                    if (buttonRect.left <= event.x && buttonRect.right >= event.x
+//                            && buttonRect.top <= event.y && buttonRect.bottom >= event.y) {
+//                        playStatus = STATUS_STARTED
+//                        invalidate()
+//                    }
                 }
                 STATUS_STARTED -> {
                     PLAYER_LIST.forEachIndexed { index, player ->
@@ -403,14 +388,9 @@ class SadariView @JvmOverloads constructor(context: Context, attrs: AttributeSet
         }
     }
 
-    private fun getStartButtonRect(): Rect {
-        var sadariRect = getSadariRect()
-        return Rect().apply {
-            top = sadariRect.top + DP24 * 4
-            bottom = sadariRect.bottom - DP24 * 4
-            left = sadariRect.left + DP24 * 2
-            right = sadariRect.right - DP24 * 2
-        }
+    fun startSadari() {
+        playStatus = STATUS_STARTED
+        invalidate()
     }
 }
 

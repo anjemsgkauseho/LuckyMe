@@ -179,6 +179,18 @@
         </HorizontalScrollView>
 
         <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/abStart"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:text="Start"
+            android:onClick="@{(view) -> viewModel.onStartClicked()}"
+            app:goneUnless="@{viewModel.playStatus == Constants.INSTANCE.STATUS_WAITING}"
+            app:layout_constraintTop_toTopOf="@id/hsvSadari"
+            app:layout_constraintBottom_toBottomOf="@id/hsvSadari"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/abAll"
             style="@style/text_12"
             android:layout_width="100dp"
