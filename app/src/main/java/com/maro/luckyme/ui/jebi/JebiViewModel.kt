@@ -5,8 +5,12 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations.map
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.maro.luckyme.data.common.CommonData
+import com.maro.luckyme.domain.jebi.GetJebiParam
+import com.maro.luckyme.domain.jebi.GetJebiUseCase
+import com.maro.luckyme.domain.jebi.LuckyRepository
 import com.maro.luckyme.domain.Result
-import com.maro.luckyme.domain.jebi.*
+import com.maro.luckyme.domain.jebi.GetJebiFlowUseCase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
@@ -14,12 +18,15 @@ import timber.log.Timber
 
 class JebiViewModel : ViewModel() {
 
-    private val getJebiMediatorUseCase = GetJebiMediatorUseCase()
     private val getJebiUseCase = GetJebiUseCase(Dispatchers.IO)
     private val getJebiFlowUseCase = GetJebiFlowUseCase(Dispatchers.IO)
 
-    // MediatorUseCase 버전
-    var param: Pair<Int, Int>? = null
+    // 밋밋한 버전
+    val param = MutableLiveData<Pair<Int, Int>>()
+    val result = map(param) {
+        val repository = LuckyRepository()
+        repository.makeResult(it.first, it.second)
+    }
     // Coroutine 버전
     var paramCoroutine: Pair<Int, Int>? = null
     // Flow 버전
@@ -30,18 +37,23 @@ class JebiViewModel : ViewModel() {
     val selected = MutableLiveData<JebiItem>()
 
     init {
-        items.addSource(getJebiMediatorUseCase.observe()) { result ->
-            items.value = when (result) {
-                is Result.Success -> result.data
-                is Result.Error -> null
+        items.addSource(result) {
+            items.value = when (it) {
+                is Result.Success -> mutableListOf<JebiItem>().apply {
+                    Timber.d("[sunchulbaek] 당첨 = ${it.data.first}")
+                    Timber.d("[sunchulbaek] 전체 = ${it.data.second}")
+                    it.data.second.forEachIndexed { index, shuffledIndex ->
+                        add(JebiItem(CommonData.get12KanjiListByIndex(shuffledIndex), it.data.first.contains(index)))
+                    }
+                }
+                is Result.Error -> TODO()
             }
         }
     }
 
-    // MediatorUseCase 버전
-    fun initMediator(winning: Int, total: Int) {
-        param = Pair(winning, total)
-        getJebiMediatorUseCase.execute(GetJebiParam(winning, total))
+    // 밋밋한 버전
+    fun initPlain(winning: Int, total: Int) {
+        param.value = Pair(winning, total)
     }
 
     // 코루틴 버전
@@ -89,8 +101,8 @@ class JebiViewModel : ViewModel() {
         paramCoroutine != null -> { // Coroutine 버전
             initCoroutine(paramCoroutine!!.first + (winning ?: 0), paramCoroutine!!.second + (total ?: 0))
         }
-        else -> { // MediatorUseCase 버전
-            initMediator(param!!.first + (winning ?: 0), param!!.second + (total ?: 0))
+        else -> { // 밋밋한 버전
+            param.value = Pair(param.value!!.first + (winning ?: 0), param.value!!.second + (total ?: 0))
         }
     }
 
