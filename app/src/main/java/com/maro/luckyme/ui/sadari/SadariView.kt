@@ -206,6 +206,7 @@ class SadariView @JvmOverloads constructor(context: Context, attrs: AttributeSet
 
         canvas?.let {
             sadari?.let {
+                Log.e("XXX", "---> ")
                 drawSadari(canvas)
                 drawPlayer(canvas)
                 drawHitAndMiss(canvas)
@@ -340,10 +341,7 @@ class SadariView @JvmOverloads constructor(context: Context, attrs: AttributeSet
                                 && player.bounds.top <= event.y && player.bounds.bottom >= event.y) {
 
                             if (!playerResultMap.containsKey(index)) {
-                                playerResultMap.put(index, PlayerResult(
-                                        PathMeasure(branchToPath(DataHelper.getPlayerPathList(sadari, index), index), false),
-                                        PLAYER_HIT_LIST[index],
-                                ))
+                                playPlayer(index)
                             }
 
                             invalidate()
@@ -353,6 +351,20 @@ class SadariView @JvmOverloads constructor(context: Context, attrs: AttributeSet
             }
         }
         return true
+    }
+
+    private fun playPlayer(index: Int) {
+        playerResultMap.put(index, PlayerResult(
+            PathMeasure(branchToPath(DataHelper.getPlayerPathList(sadari, index), index), false),
+            PLAYER_HIT_LIST[index],
+        ))
+    }
+
+    fun playAll() {
+        for (i in 0..playerCount-1) {
+            playPlayer(i)
+        }
+        invalidate()
     }
 
     private fun branchToPath(branchList: List<Branch>, playerIndex: Int): Path {

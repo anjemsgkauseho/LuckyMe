@@ -5,6 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.maro.luckyme.ui.SingleLiveEvent
 import com.maro.luckyme.ui.sadari.data.Constants
 
 class SadariViewModel : ViewModel() {
@@ -20,6 +21,8 @@ class SadariViewModel : ViewModel() {
     private val _maxBombCount = MediatorLiveData<Int>()
     val maxBombCount: LiveData<Int>
         get() = _maxBombCount
+
+    val playAllEvent = SingleLiveEvent<Unit>()
 
     init {
         _maxBombCount.addSource(_playerCount) {
@@ -77,5 +80,9 @@ class SadariViewModel : ViewModel() {
 
     fun onRestartClicked() {
         _playerCount.value = _playerCount.value
+    }
+
+    fun onPlayAllClicked() {
+        playAllEvent.call()
     }
 }

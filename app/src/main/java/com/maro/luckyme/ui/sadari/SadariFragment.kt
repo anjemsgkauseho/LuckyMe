@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.BindingAdapter
+import androidx.lifecycle.Observer
 import com.maro.luckyme.databinding.SadariFragmentBinding
 
 class SadariFragment : Fragment() {
@@ -29,6 +30,18 @@ class SadariFragment : Fragment() {
         }
 
         return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        setObservers()
+    }
+
+    private fun setObservers() {
+        viewModel.playAllEvent.observe(viewLifecycleOwner, Observer {
+            binding.svSadari.playAll()
+        })
     }
 }
 
