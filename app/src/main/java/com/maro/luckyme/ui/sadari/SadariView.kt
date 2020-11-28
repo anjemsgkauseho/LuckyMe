@@ -2,6 +2,7 @@ package com.maro.luckyme.ui.sadari
 
 import android.content.Context
 import android.graphics.*
+import android.graphics.Color.red
 import android.util.AttributeSet
 import android.util.Log
 import android.view.MotionEvent
@@ -33,6 +34,9 @@ import java.util.*
  * |--|  |
  * |  |  | <= KKODARI
  */
+
+
+// XXX 사다리 정보 만들 때 player 정보와 결과 정보 미리 다 만들어 놓자
 
 class SadariView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0) : View(context, attrs, defStyleAttr) {
     val TAG = SadariView::class.simpleName
@@ -105,6 +109,7 @@ class SadariView @JvmOverloads constructor(context: Context, attrs: AttributeSet
     lateinit var paint2: Paint
     lateinit var animPaint: Paint
     lateinit var hitPaint: Paint
+    lateinit var bombPaint: Paint
 
 
     lateinit var sadari: LinkedList<Stream>
@@ -163,6 +168,12 @@ class SadariView @JvmOverloads constructor(context: Context, attrs: AttributeSet
             textSize = resources.getDimensionPixelSize(R.dimen.dp12).toFloat()
         }
 
+        bombPaint = Paint().apply {
+            color = ContextCompat.getColor(context, R.color.red)
+            style = Paint.Style.FILL
+            textSize = resources.getDimensionPixelSize(R.dimen.dp12).toFloat()
+        }
+
         setOnTouchListener { v, event ->
             processTouchEvent(v, event)
         }
@@ -193,7 +204,7 @@ class SadariView @JvmOverloads constructor(context: Context, attrs: AttributeSet
         // Width
         var width = CELL_WIDTH * playerCount + DP16 + DP16
         if (point.x > width) {
-            viewStartX = (point.x - width) / 2 + DP16
+            viewStartX = (point.x - width) / 2 + DP20
             width = point.x
         } else {
             viewStartX = DP16
@@ -212,7 +223,7 @@ class SadariView @JvmOverloads constructor(context: Context, attrs: AttributeSet
             sadari?.let {
                 drawSadari(canvas)
                 drawPlayer(canvas)
-                drawHitAndMiss(canvas)
+                drawHit(canvas)
                 drawAnimPath(canvas)
                 drawStartButton(canvas)
             }
@@ -253,7 +264,7 @@ class SadariView @JvmOverloads constructor(context: Context, attrs: AttributeSet
         }
     }
 
-    private fun drawHitAndMiss(canvas: Canvas) {
+    private fun drawHit(canvas: Canvas) {
         var sadariStartY = PLAYER_WIDTH + DP8
         var sadariEndY = sadariStartY + KKODARI + CELL_HEIGHT * TOTAL_BRANCH_COUNT + KKODARI
 
@@ -267,19 +278,24 @@ class SadariView @JvmOverloads constructor(context: Context, attrs: AttributeSet
             } else {
                 canvas.drawText("통과", x + 22, sadariEndY + DP20.toFloat() + 34, hitPaint)
             }
-
         }
     }
 
     private fun drawAnimPath(canvas: Canvas) {
         if (playerResultMap.isEmpty()) {
+            Log.e("XXX", "===1> animPath=${animPath.isEmpty}")
             return
         }
 
         _matrix.reset()
-
         for ((index, playerResult) in playerResultMap) {
             playerResult.pathMeasure?.getPosTan(playerResult.distance!!, pos, tan)
+
+            if (pos[1] > 1110f) {
+                playerResult.completed = true
+            }
+
+            Log.e("XXX", "===> animPath=${animPath.isEmpty}, pos0=${pos[0]}, pos1=${pos[1]}")
             curX = viewStartX + pos[0] - PLAYER_WIDTH_SMALL / 2
             curY = pos[1] - PLAYER_WIDTH_SMALL / 2
             _matrix.postTranslate(curX!!, curY!!)
@@ -288,7 +304,6 @@ class SadariView @JvmOverloads constructor(context: Context, attrs: AttributeSet
             } else {
                 playerResult.animPath.lineTo(viewStartX + pos[0], pos[1])
             }
-            Log.e("XXX", "===> animPath=${animPath.isEmpty}")
 
             animPaint.color = ContextCompat.getColor(context, COLOR_LIST[index])
             canvas.drawPath(playerResult.animPath, animPaint)
@@ -298,6 +313,7 @@ class SadariView @JvmOverloads constructor(context: Context, attrs: AttributeSet
             }
 
             playerResult.distance = playerResult.distance + SPEED
+//            Log.e("XXX", "===> distance=${playerResult.distance}")
         }
 
         invalidate()
@@ -349,14 +365,19 @@ class SadariView @JvmOverloads constructor(context: Context, attrs: AttributeSet
     }
 
     private fun playPlayer(index: Int) {
+        if (playerResultMap.containsKey(index)) {
+            return
+        }
+
         playerResultMap.put(index, PlayerResult(
-            PathMeasure(branchToPath(DataHelper.getPlayerPathList(sadari, index), index), false),
-            PLAYER_HIT_LIST[index],
+                PathMeasure(branchToPath(DataHelper.getPlayerPathList(sadari, index), index), false),
+                PLAYER_HIT_LIST[index],
+                index = index
         ))
     }
 
     fun playAll() {
-        for (i in 0..playerCount-1) {
+        for (i in 0..playerCount - 1) {
             playPlayer(i)
         }
         invalidate()
@@ -405,8 +426,10 @@ class SadariView @JvmOverloads constructor(context: Context, attrs: AttributeSet
 }
 
 data class PlayerResult(
-    var pathMeasure: PathMeasure,
-    var icon: VectorDrawableCompat,
-    var distance: Float = 0f,
-    var animPath: Path = Path()
+        var pathMeasure: PathMeasure,
+        var icon: VectorDrawableCompat,
+        var distance: Float = 0f,
+        var animPath: Path = Path(),
+        var completed: Boolean = false,
+        var index: Int
 )

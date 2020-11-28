@@ -11,6 +11,11 @@ fun goneUnless(view: View, visible: Boolean?) {
     view.visibility = if (visible == true) View.VISIBLE else View.GONE
 }
 
+@BindingAdapter("invisibleUnless")
+fun invisibleUnless(view: View, visible: Boolean?) {
+    view.visibility = if (visible == true) View.VISIBLE else View.INVISIBLE
+}
+
 /**
  * 제비뽑기 visible <-> gone <-> invisible 처리
  */
