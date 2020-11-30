@@ -25,5 +25,7 @@
     <color name="snake">#B3CC42</color>
     <color name="tiger">#FFC906</color>
 
-    <color name="sadari_bg">#11F05F49</color>
+    <color name="sadari_bg">#FFffc107</color>
+
+    <color name="text_black">#292929</color>
 </resources>

@@ -2,7 +2,6 @@ package com.maro.luckyme.ui.sadari
 
 import android.content.Context
 import android.graphics.*
-import android.graphics.Color.red
 import android.util.AttributeSet
 import android.util.Log
 import android.view.MotionEvent
@@ -42,6 +41,10 @@ class SadariView @JvmOverloads constructor(context: Context, attrs: AttributeSet
     val TAG = SadariView::class.simpleName
 
     val DP16 = resources.getDimensionPixelSize(R.dimen.dp16)
+    val DP14 = resources.getDimensionPixelSize(R.dimen.dp14)
+    val DP10 = resources.getDimensionPixelSize(R.dimen.dp10)
+    val DP0_5 = resources.getDimensionPixelSize(R.dimen.dp0_5)
+    val DP1 = resources.getDimensionPixelSize(R.dimen.dp1)
     val DP8 = resources.getDimensionPixelSize(R.dimen.dp8)
     val DP20 = resources.getDimensionPixelSize(R.dimen.dp20)
     val DP24 = resources.getDimensionPixelSize(R.dimen.dp24)
@@ -53,6 +56,7 @@ class SadariView @JvmOverloads constructor(context: Context, attrs: AttributeSet
 
     val PLAYER_WIDTH = resources.getDimensionPixelSize(R.dimen.sadari_player_width)
     val PLAYER_WIDTH_SMALL = resources.getDimensionPixelSize(R.dimen.sadari_player_width_s)
+    val BOMB_WIDTH = resources.getDimensionPixelSize(R.dimen.sadari_bomb_width)
     val PLAYER_LIST = mutableListOf<VectorDrawableCompat>().apply {
         add(VectorDrawableCompat.create(resources, R.drawable.ic_rat, null)!!)
         add(VectorDrawableCompat.create(resources, R.drawable.ic_cow, null)!!)
@@ -81,6 +85,15 @@ class SadariView @JvmOverloads constructor(context: Context, attrs: AttributeSet
         add(VectorDrawableCompat.create(resources, R.drawable.ic_chicken, null)!!)
         add(VectorDrawableCompat.create(resources, R.drawable.ic_dog, null)!!)
         add(VectorDrawableCompat.create(resources, R.drawable.ic_pig, null)!!)
+    }
+
+    val BOMB_LIST = mutableListOf<VectorDrawableCompat>().apply {
+        add(VectorDrawableCompat.create(resources, R.drawable.bomb1, null)!!)
+        add(VectorDrawableCompat.create(resources, R.drawable.bomb2, null)!!)
+        add(VectorDrawableCompat.create(resources, R.drawable.bomb3, null)!!)
+        add(VectorDrawableCompat.create(resources, R.drawable.bomb4, null)!!)
+        add(VectorDrawableCompat.create(resources, R.drawable.bomb5, null)!!)
+        add(VectorDrawableCompat.create(resources, R.drawable.bomb6, null)!!)
     }
 
     val COLOR_LIST = mutableListOf<Int>().apply {
@@ -149,7 +162,7 @@ class SadariView @JvmOverloads constructor(context: Context, attrs: AttributeSet
             style = Paint.Style.FILL
         }
         paint2 = Paint().apply {
-            color = ContextCompat.getColor(context, R.color.teal_700)
+            color = ContextCompat.getColor(context, R.color.sadari_bg)
             strokeWidth = STROKE_WIDTH.toFloat()
             style = Paint.Style.FILL
         }
@@ -204,14 +217,14 @@ class SadariView @JvmOverloads constructor(context: Context, attrs: AttributeSet
         // Width
         var width = CELL_WIDTH * playerCount + DP16 + DP16
         if (point.x > width) {
-            viewStartX = (point.x - width) / 2 + DP20
+            viewStartX = (point.x - width) / 2 + DP10 + DP0_5 // XXX 임의의 값을 더해줌 (전체 크기 바뀔 때마다 수동 조절해야 함)
             width = point.x
         } else {
             viewStartX = DP16
         }
 
         // Height
-        var height = PLAYER_WIDTH + DP8 + KKODARI + CELL_HEIGHT * TOTAL_BRANCH_COUNT + KKODARI + DP8 + DP20 * 2 + DP8
+        var height = PLAYER_WIDTH + DP8 + KKODARI + CELL_HEIGHT * TOTAL_BRANCH_COUNT + KKODARI + DP8 + DP20 * 2 + DP24 // bomb의 DP20
 
         setMeasuredDimension(width, height)
     }
@@ -223,7 +236,7 @@ class SadariView @JvmOverloads constructor(context: Context, attrs: AttributeSet
             sadari?.let {
                 drawSadari(canvas)
                 drawPlayer(canvas)
-                drawHit(canvas)
+                drawBomb(canvas)
                 drawAnimPath(canvas)
                 drawStartButton(canvas)
             }
@@ -264,19 +277,21 @@ class SadariView @JvmOverloads constructor(context: Context, attrs: AttributeSet
         }
     }
 
-    private fun drawHit(canvas: Canvas) {
+    private fun drawBomb(canvas: Canvas) {
         var sadariStartY = PLAYER_WIDTH + DP8
         var sadariEndY = sadariStartY + KKODARI + CELL_HEIGHT * TOTAL_BRANCH_COUNT + KKODARI
 
+        var bombIndex = 0
         for (i in 0..playerCount - 1) {
-            var x = viewStartX + (CELL_WIDTH * i).toFloat()
+            var x = viewStartX + (CELL_WIDTH * i).toFloat() + DP14 // XXX 임의 조정
+            var y = sadariEndY + DP24 // DP24는 전체 크기에 영향을 미침
 
-            canvas.drawCircle(x + DP20.toFloat(), sadariEndY + DP20.toFloat() + DP8, DP20.toFloat(), paint)
-            // XXX 문구
             if (bombIndexList.contains(i)) {
-                canvas.drawText("꽝", x + 34, sadariEndY + DP20.toFloat() + 34, hitPaint)
-            } else {
-                canvas.drawText("통과", x + 22, sadariEndY + DP20.toFloat() + 34, hitPaint)
+                BOMB_LIST[bombIndex].apply {
+                    setBounds(x.toInt(), y, x.toInt() + BOMB_WIDTH, y + BOMB_WIDTH)
+                    draw(canvas)
+                }
+                bombIndex++
             }
         }
     }
@@ -332,7 +347,7 @@ class SadariView @JvmOverloads constructor(context: Context, attrs: AttributeSet
 
         var margin = DP24
 
-        canvas.drawRect(left - margin, top + margin, right + margin, bottom - margin, paint)
+        canvas.drawRect(left - margin, top + margin, right + margin, bottom - margin, paint2)
     }
 
     private fun processTouchEvent(v: View, event: MotionEvent): Boolean {

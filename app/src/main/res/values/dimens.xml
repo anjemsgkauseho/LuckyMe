@@ -1,9 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <dimen name="dp0_5">0.5dp</dimen>
+    <dimen name="dp1">1dp</dimen>
     <dimen name="dp4">8dp</dimen>
     <dimen name="dp8">8dp</dimen>
+    <dimen name="dp10">10dp</dimen>
     <dimen name="dp12">12dp</dimen>
+    <dimen name="dp14">14dp</dimen>
     <dimen name="dp16">16dp</dimen>
     <dimen name="dp20">20dp</dimen>
     <dimen name="dp24">24dp</dimen>
@@ -13,10 +17,11 @@
 
     <!-- 사다리 -->
     <dimen name="sadari_stroke_width">4dp</dimen>
-    <dimen name="sadari_player_width">40dp</dimen>
-    <dimen name="sadari_player_width_s">28dp</dimen>
+    <dimen name="sadari_player_width">72dp</dimen>
+    <dimen name="sadari_player_width_s">60dp</dimen>
+    <dimen name="sadari_bomb_width">48dp</dimen>
     <dimen name="sadari_cell_height">20dp</dimen>
     <!-- 가로 간격 -->
-    <dimen name="sadari_cell_width">48dp</dimen>
+    <dimen name="sadari_cell_width">60dp</dimen>
 
 </resources>

@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    >
+    xmlns:tools="http://schemas.android.com/tools">
 
     <data>
 
@@ -10,76 +9,87 @@
 
         <variable
             name="viewModel"
-            type="com.maro.luckyme.ui.sadari.SadariViewModel" /> />
+            type="com.maro.luckyme.ui.sadari.SadariViewModel" />
+        />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/sadari_bg"
-        >
+        android:background="@color/white">
 
-<!--        <com.maro.luckyme.ui.sadari.AnimationView-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="match_parent" />-->
+        <!--        <com.maro.luckyme.ui.sadari.AnimationView-->
+        <!--            android:layout_width="match_parent"-->
+        <!--            android:layout_height="match_parent" />-->
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/clControl"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            app:layout_constraintTop_toTopOf="parent"
-            >
+            app:layout_constraintTop_toTopOf="parent">
 
             <LinearLayout
                 android:id="@+id/llPlayer"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:gravity="center_vertical"
                 android:orientation="horizontal"
                 android:paddingStart="16dp"
                 android:paddingEnd="16dp"
-                android:layout_marginTop="8dp"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toStartOf="@id/abRestart"
-                >
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
 
                 <androidx.appcompat.widget.AppCompatTextView
                     style="@style/text_12"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="인원수"
-                    />
+                    android:textColor="@color/text_black" />
 
-                <androidx.appcompat.widget.AppCompatButton
+                <androidx.appcompat.widget.AppCompatTextView
                     style="@style/text_12"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:layout_marginStart="4dp"
+                    android:background="@drawable/bg_circle_500"
+                    android:gravity="center"
+                    android:onClick="@{(view) -> viewModel.onMinusPlayerClicked()}"
                     android:text="-"
-                    android:minWidth="0dp"
-                    android:onClick="@{(view) -> viewModel.onMinusPlayerClicked()}"/>
+                    android:textColor="@color/white"
+                    android:textStyle="bold" />
 
                 <androidx.appcompat.widget.AppCompatTextView
                     style="@style/text_12"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginStart="4dp"
                     android:text="@{@string/sadari_player_count(viewModel.playerCount)}"
-                    />
+                    android:textColor="@color/text_black"
+                    tools:text="6명" />
 
-                <androidx.appcompat.widget.AppCompatButton
+                <androidx.appcompat.widget.AppCompatTextView
                     style="@style/text_12"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:layout_marginStart="4dp"
+                    android:background="@drawable/bg_circle_500"
+                    android:gravity="center"
+                    android:onClick="@{(view) -> viewModel.onPlusPlayerClicked()}"
                     android:text="+"
-                    android:minWidth="0dp"
-                    android:onClick="@{(view) -> viewModel.onPlusPlayerClicked()}"/>
+                    android:textColor="@color/white"
+                    android:textStyle="bold" />
 
                 <androidx.appcompat.widget.AppCompatTextView
                     style="@style/text_12"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginStart="4dp"
                     android:text="@{@string/sadari_player_count_desc(Constants.INSTANCE.MIN_PLAYER_COUNT, Constants.INSTANCE.MAX_PLAYER_COUNT)}"
-                    />
+                    android:textColor="@color/text_black"
+                    tools:text="(최소2명 ~ 최대12명)" />
 
             </LinearLayout>
 
@@ -87,66 +97,81 @@
                 android:id="@+id/llBomb"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:gravity="center_vertical"
                 android:orientation="horizontal"
                 android:paddingStart="16dp"
                 android:paddingEnd="16dp"
-                android:layout_marginTop="4dp"
-                app:layout_constraintTop_toBottomOf="@id/llPlayer"
-                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toStartOf="@id/abRestart"
-                >
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/llPlayer">
 
                 <androidx.appcompat.widget.AppCompatTextView
                     style="@style/text_12"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="폭탄수"
-                    />
+                    android:textColor="@color/text_black" />
 
-                <androidx.appcompat.widget.AppCompatButton
+                <androidx.appcompat.widget.AppCompatTextView
                     style="@style/text_12"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:layout_marginStart="4dp"
+                    android:background="@drawable/bg_circle_500"
+                    android:gravity="center"
+                    android:onClick="@{(view) -> viewModel.onMinusBombClicked()}"
                     android:text="-"
-                    android:minWidth="0dp"
-                    android:onClick="@{(view) -> viewModel.onMinusBombClicked()}"/>
+                    android:textColor="@color/white"
+                    android:textStyle="bold" />
 
                 <androidx.appcompat.widget.AppCompatTextView
                     style="@style/text_12"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginStart="4dp"
                     android:text="@{@string/sadari_bomb_count(viewModel.bombCount)}"
-                    />
+                    android:textColor="@color/text_black"
+                    tools:text="3개" />
 
-                <androidx.appcompat.widget.AppCompatButton
+                <androidx.appcompat.widget.AppCompatTextView
                     style="@style/text_12"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:layout_marginStart="4dp"
+                    android:background="@drawable/bg_circle_500"
+                    android:gravity="center"
+                    android:onClick="@{(view) -> viewModel.onPlusBombClicked()}"
                     android:text="+"
-                    android:minWidth="0dp"
-                    android:onClick="@{(view) -> viewModel.onPlusBombClicked()}"/>
+                    android:textColor="@color/white"
+                    android:textStyle="bold" />
 
                 <androidx.appcompat.widget.AppCompatTextView
                     style="@style/text_12"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginStart="4dp"
                     android:text="@{@string/sadari_bomb_count_desc(Constants.INSTANCE.MIN_BOMB_COUNT, viewModel.maxBombCount)}"
-                    />
+                    android:textColor="@color/text_black"
+                    tools:text="(최소1개 ~ 최대6개)" />
 
             </LinearLayout>
 
-            <androidx.appcompat.widget.AppCompatButton
+            <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/abRestart"
-                style="@style/text_12"
-                android:layout_width="80dp"
-                android:layout_height="80dp"
-                android:text="재시작"
+                style="@style/text_b_14"
+                android:layout_width="64dp"
+                android:layout_height="64dp"
                 android:layout_marginEnd="16dp"
+                android:background="@drawable/bg_solid_rounded_rect_500_2"
+                android:gravity="center"
                 android:onClick="@{(view) -> viewModel.onRestartClicked()}"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="@id/llPlayer"
+                android:text="재시작"
+                android:textColor="@color/white"
+                android:textStyle="bold"
                 app:layout_constraintBottom_toBottomOf="@id/llBomb"
-                />
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/llPlayer" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -155,55 +180,60 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_marginTop="16dp"
-            app:layout_constraintTop_toBottomOf="@id/clControl"
-            >
+            app:layout_constraintTop_toBottomOf="@id/clControl">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:orientation="vertical"
-                >
+                android:orientation="vertical">
 
                 <com.maro.luckyme.ui.sadari.SadariView
                     android:id="@+id/svSadari"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    app:playerCount="@{viewModel.playerCount}"
                     app:bombCount="@{viewModel.bombCount}"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    />
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:playerCount="@{viewModel.playerCount}" />
 
             </LinearLayout>
 
         </HorizontalScrollView>
 
-        <androidx.appcompat.widget.AppCompatButton
+        <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/abStart"
+            style="@style/text_b_14"
             android:layout_width="100dp"
             android:layout_height="100dp"
-            android:text="Start"
+            android:background="@drawable/bg_solid_rounded_rect_500_2"
+            android:gravity="center"
             android:onClick="@{(view) -> viewModel.onStartClicked()}"
+            android:text="시작"
+            android:textColor="@color/white"
+            android:textStyle="bold"
             app:goneUnless="@{viewModel.playStatus == Constants.INSTANCE.STATUS_WAITING}"
-            app:layout_constraintTop_toTopOf="@id/hsvSadari"
             app:layout_constraintBottom_toBottomOf="@id/hsvSadari"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
+            app:layout_constraintTop_toTopOf="@id/hsvSadari" />
 
-        <androidx.appcompat.widget.AppCompatButton
+        <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/abAll"
-            style="@style/text_12"
+            style="@style/text_b_14"
             android:layout_width="100dp"
             android:layout_height="48dp"
-            android:text="전체실행"
             android:layout_marginTop="16dp"
+            android:background="@drawable/bg_solid_rounded_rect_500_2"
+            android:gravity="center"
             android:onClick="@{(view) -> viewModel.onPlayAllClicked()}"
+            android:text="전체실행"
+            android:textColor="@color/white"
+            android:textStyle="bold"
             app:invisibleUnless="@{viewModel.playStatus == Constants.INSTANCE.STATUS_STARTED}"
-            app:layout_constraintTop_toBottomOf="@id/hsvSadari"
-            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/hsvSadari" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
